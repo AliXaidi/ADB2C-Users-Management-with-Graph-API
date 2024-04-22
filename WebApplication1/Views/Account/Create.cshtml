@@ -1,0 +1,46 @@
+﻿
+@model WebApplication1.Domain.Requests.ADB2CUserRequestDTO
+
+<h1>Create New User</h1>
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["error"]
+    </div>
+}
+<form method="post" asp-action="Create" asp-controller="Account">
+    <div class="mb-3">
+        <label asp-for="CompanyName">Company Name</label>
+        <input readonly asp-for="CompanyName" class="form-control" />
+        <span asp-validation-for="CompanyName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="IssuerAssignedId">Email</label>
+        <input autofocus asp-for="IssuerAssignedId" type="email" class="form-control" />
+        <span asp-validation-for="IssuerAssignedId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DisplayName"> Name</label>
+        <input asp-for="DisplayName" class="form-control" />
+        <span asp-validation-for="DisplayName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password">Password</label>
+        <input asp-for="Password" type="text" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MobilePhone">Mobile No</label>
+        <input asp-for="MobilePhone" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

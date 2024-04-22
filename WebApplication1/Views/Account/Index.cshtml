@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "User Listing";
+}
+
+@model List< WebApplication1.Domain.Responses.ADB2CUserResponseDTO>
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["error"]
+    </div>
+}
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["success"]
+    </div>
+}
+<div class="row">
+    <div class="col-12">
+        <a asp-controller="Account" asp-action="Create" class="btn btn-outline-danger">
+            <span><i class="fa-sharp fa-regular fa-plus"></i></span>
+            <span> Create New User</span>
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <table id="userTable" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+
+                    <th>Display Name</th>
+                    <th>Email</th>
+                    <th>Company Name</th>
+                    <th>Mobile Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in @Model)
+                {
+                    <tr>
+
+
+                        <td>@item.DisplayName</td>
+                        <td>@item.Email</td>
+                        <td>@item.CompanyName</td>
+                        <td>@item.MobilePhone</td>
+                        <td>
+
+                            <div>
+                                @*  <a title="View" href="@Url.Action("UpdateExternals","Externals",new {ExternalId = @item.ExternalId})"><i class="fa fa-eye" aria-hidden="true" style="color:#c1c0c0"></i></a>
+                            <a title="Delete" class="delete-button" href="#" data-external-no="@item.ExternalId"><i class="fa fa-trash" aria-hidden="true" style="color:#c1c0c0"></i></a> *@
+                                <a title="View" href="@Url.Action("Edit","Account",new {id = @item.Id, email=@item.Email})">Reset Password</a>
+                                <a title="Delete" onclick="return confirmDelete()" href="@Url.Action("Delete","Account",new {id = @item.Id})">Delete</a>
+                            </div>
+
+
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        function confirmDelete() {
+            var result = confirm("Are you sure you want to delete this user?");
+
+            return result;
+        }
+        $(document).ready(function () {
+            // Create search header
+            var new_row = $("<tr class='search-header'/>");
+            $('#userTable thead th').each(function (i) {
+                var title = $(this).text();
+                var id = title.replace(/\s+/g, '_'); // Replace spaces with underscores in the id
+
+                $(this).attr('id', id);
+                var new_th = $('<th  style="' + $(this).attr('style') + '" />');
+                new_th.css('min-width', '90px');
+                $(new_th).append('<input type="text" class="form-control ' + title + '"  placeholder="' + title + '" data-index="' + i + '"/>');
+
+                $(new_row).append(new_th);
+                console.log(id)
+
+            });
+
+            $('#userTable thead').append(new_row);
+
+            // Init DataTable
+            var table = $('#userTable').DataTable({
+                "lengthChange": false,
+                "scrollX": true,
+                "searching": true,
+                "ordering": false,
+                "pageLength": 10,
+                //pagingType: "full_numbers",
+                language: {
+                    paginate: {
+                        next: "»",
+                        previous: "«",
+                        //first: '<i class="fas fa-angle-double-left"></i>',
+                        //last: '<i class="fas fa-angle-double-right"></i>'
+                    }
+                },
+            });
+
+            // Filter event handler
+            $(table.table().container()).on('keyup', 'thead input', function () {
+                table
+                    .column($(this).data('index'))
+                    .search(this.value)
+                    .draw();
+            });
+
+
+
+        });
+    </script>
+}
